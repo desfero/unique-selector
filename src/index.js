@@ -56,7 +56,15 @@ function testUniqueness( element, selector )
  */
 function getFirstUnique( element, selectors )
 {
-    return selectors.find( testUniqueness.bind( null, element ) );
+  for ( let i = 0; i < selectors.length; i++ )
+    {
+    if ( testUniqueness( element, selectors[ i ] ) )
+    {
+      return selectors[ i ];
+    }
+  }
+
+  return undefined;
 }
 
 /**
@@ -108,10 +116,10 @@ function getUniqueSelector( element, selectorTypes, attributesToIgnore, excludeR
     elementSelectors.Class = elementSelectors.Class.filter( className => !excludeRegex.test( className ) );
   }
 
-  for( let selectorType of selectorTypes )
+  for( let i = 0; i < selectorTypes.length; i++ )
   {
       const { ID, Tag, Class : Classes, Attributes, NthChild } = elementSelectors;
-      switch ( selectorType )
+      switch ( selectorTypes[ i ] )
       {
         case 'ID' :
         if ( Boolean( ID ) && testUniqueness( element, ID ) )
@@ -176,9 +184,9 @@ export default function unique( el, options={} )
   const allSelectors = [];
   const parents = getParents( el );
 
-  for( let elem of parents )
+  for( let i = 0; i < parents.length; i++ )
   {
-    const selector = getUniqueSelector( elem, selectorTypes, attributesToIgnore, excludeRegex );
+    const selector = getUniqueSelector( parents[ i ], selectorTypes, attributesToIgnore, excludeRegex );
     if( Boolean( selector ) )
     {
       allSelectors.push( selector );
@@ -186,9 +194,9 @@ export default function unique( el, options={} )
   }
 
   const selectors = [];
-  for( let it of allSelectors )
+  for( let i = 0; i < allSelectors.length; i++ )
   {
-    selectors.unshift( it );
+    selectors.unshift( allSelectors[ i ] );
     const selector = selectors.join( ' > ' );
     if( isUnique( el, selector ) )
     {

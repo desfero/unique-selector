@@ -1,5 +1,5 @@
 components
 build
 node_modules
-lib
+#lib
 yarn.lock
